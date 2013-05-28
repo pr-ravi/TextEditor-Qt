@@ -44,13 +44,13 @@ setFixedHeight(sizeHint().height());
 void FindDialog::findClicked(){
 QString text=lineEdit->text();
 Qt::CaseSensitivity cs=
-        caseCheckBox->isChecked() ? Qt::CaseSensitive :
-                                                                Qt::CaseInsensitive;
+        caseCheckBox->isChecked() ? Qt::CaseSensitive : Qt::CaseInsensitive;
 if(backwardCheckBox->isChecked()){
         emit findPrevious(text,cs);
-        }else{
+}else{
         emit findNext(text,cs);
-        }
+}
+
 }
 void FindDialog::enableFindButton(const QString &text){
     findButton->setEnabled(!text.isEmpty());
