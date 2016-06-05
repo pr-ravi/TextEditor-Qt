@@ -17,5 +17,6 @@
         <file>images/filesaveas.png</file>
         <file>images/editredo.png</file>
         <file>images/editundo.png</file>
+        <file>images/print.png</file>
     </qresource>
 </RCC>
