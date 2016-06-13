@@ -20,37 +20,45 @@ void MainWindow::initMenus()
 /*Create Actions*/
     newFileAction=new QAction(tr("&New"), this);
     newFileAction->setToolTip("Create a new file");
-    newFileAction->setStatusTip("wtf?");
+    newFileAction->setStatusTip("New File");
     newFileAction->setIcon(QIcon(":/images/filenew.png"));
     newFileAction->setShortcut(QKeySequence("Ctrl+N"));
     newFileAction->showStatusText(this->statusBar());
+
    // newFileAction->setShortcutContext(Qt::ShortcutContext);
     openFileAction=new QAction(tr("O&pen"), this);
     openFileAction->setToolTip("Open an existing file");
+    openFileAction->setStatusTip("Open File");
     openFileAction->setIcon(QIcon(":/images/fileopen.png"));
     openFileAction->setShortcut(QKeySequence("Ctrl+O"));
 
     saveFileAction=new QAction(tr("&Save"), this);
     saveFileAction->setToolTip("Save current file");
+    saveFileAction->setStatusTip("Save File");
     saveFileAction->setIcon(QIcon(":/images/filesave.png"));
 
     printAction=new QAction(tr("Print"),this);
     printAction->setToolTip("Print the page");
+    printAction->setStatusTip("Print File");
     printAction->setIcon(QIcon(":/images/print.png"));
 
     saveAsFileAction=new QAction(tr("Save &As"), this);
+    openFileAction->setStatusTip("Open File");
     saveAsFileAction->setIcon(QIcon(":/images/filesaveas.png"));
 
     exitFileAction=new QAction(tr("E&xit"),this);
     exitFileAction->setToolTip("Exit the Application");
+    exitFileAction->setStatusTip("Exit Editor");
     exitFileAction->setIcon(QIcon(":/images/fileexit.png"));
 
     copyEditAction=new QAction(tr("&Copy"), this);
     copyEditAction->setToolTip("Copy");
+    copyEditAction->setStatusTip("Copy Text");
     copyEditAction->setIcon(QIcon(":/images/editcopy.png"));
 
     pasteEditAction=new QAction(tr("P&aste"), this);
     pasteEditAction->setToolTip("Paste");
+    pasteEditAction->setStatusTip("Paste Text");
     pasteEditAction->setIcon(QIcon(":/images/editpaste.png"));
 
     fontEditAction=new QAction(tr("F&ont"), this);
@@ -59,10 +67,12 @@ void MainWindow::initMenus()
 
     cutEditAction=new QAction(tr("C&ut"), this);
     cutEditAction->setToolTip("Cut");
+    cutEditAction->setStatusTip("Cut Text");
     cutEditAction->setIcon(QIcon(":/images/editcut.png"));
 
     findEditAction=new QAction(tr("&Find"), this);
     findEditAction->setToolTip("Find text and/or replace");
+    findEditAction->setStatusTip("Find text");
     findEditAction->setIcon(QIcon(":/images/editfind.png"));
 
     toolEditAction=new QAction(tr("Tool &Bar"),this);
@@ -301,25 +311,10 @@ bool MainWindow::fileOperate(QString &flname, int mode){
     case saveFile:{
 
         QFile textFile(flname);
-        /*
-        if(textFile.exists()){
-            int res=QMessageBox::warning(this,"Warning!!","File Already Exists <br/> Do you want to overwrite?",QMessageBox::Ok|QMessageBox::Cancel);
-            if(res){
-                if(textFile.open(QIODevice::WriteOnly)){
-                    return true;
-                }
-            }
-          }
-        else{
-            if(textFile.open(QIODevice::WriteOnly)){
-                return true;
-            }
 
-        }
-        */
         if(textFile.open(QIODevice::WriteOnly)){
             QString stringContent=textArea->toPlainText();
-            QByteArray content=stringContent.toAscii();
+            QByteArray content=stringContent.toUtf8();
             textFile.write(content);
             textFile.close();
             return true;

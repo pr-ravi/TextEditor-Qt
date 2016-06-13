@@ -3,9 +3,10 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET = textEditor
 DEPENDPATH += .
 INCLUDEPATH += .
+QT += widgets core printsupport
 
 # Input
 HEADERS += finddialog.h mainwindow.h
