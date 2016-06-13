@@ -9,6 +9,8 @@
 #include<QMenuBar>
 #include<QStatusBar>
 #include<QFile>
+#include<QPrinter>
+#include<QPrintPreviewDialog>
 #include<QFileDialog>
 #include<QFontDialog>
 class QAction;
@@ -54,6 +56,9 @@ private slots:
     void isModified();
     void updateTitle();
     void findSlot();
+    void printSlot();
+    void printPreview(QPrinter *printer);
+
 private:
     enum{saveFile,openFile};
     /*Actions*/
@@ -73,6 +78,7 @@ private:
     QAction *undoEditAction;
     QAction *redoEditAction;
     QAction *aboutHelpAction;
+    QAction *printAction;
     /*Menus*/
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -87,6 +93,9 @@ private:
     QString curFilename;
     /*Methods*/
 
+    QTextDocument *mDoc2Print;
+    QTextCursor mDocCursor;
+    void prepareDocument();
     bool fileOperate(QString &flname,int mode);
 
 };

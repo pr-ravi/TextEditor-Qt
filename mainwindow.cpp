@@ -34,6 +34,10 @@ void MainWindow::initMenus()
     saveFileAction->setToolTip("Save current file");
     saveFileAction->setIcon(QIcon(":/images/filesave.png"));
 
+    printAction=new QAction(tr("Print"),this);
+    printAction->setToolTip("Print the page");
+    printAction->setIcon(QIcon(":/images/print.png"));
+
     saveAsFileAction=new QAction(tr("Save &As"), this);
     saveAsFileAction->setIcon(QIcon(":/images/filesaveas.png"));
 
@@ -78,6 +82,7 @@ void MainWindow::initMenus()
     redoEditAction->setIcon(QIcon(":/images/editredo.png"));
     redoEditAction->setEnabled(false);
 
+
     aboutHelpAction=new QAction(tr("&About"), this);
     aboutHelpAction->setToolTip("About this application");
     aboutHelpAction->setIcon(QIcon(":/images/helpabout.png"));
@@ -94,6 +99,8 @@ void MainWindow::initMenus()
     connect(saveFileAction,SIGNAL(triggered()),this,SLOT(saveFileSlot()));
     connect(newFileAction,SIGNAL(triggered()),this,SLOT(newFileSlot()));
     connect(saveAsFileAction,SIGNAL(triggered()),this,SLOT(saveAsFileSlot()));
+    connect(printAction,SIGNAL(triggered()),this,SLOT(printSlot()));
+
     connect(textArea,SIGNAL(textChanged()),this,SLOT(isModified()));
     connect(textArea,SIGNAL(undoAvailable(bool)),undoEditAction,SLOT(setEnabled(bool)));
     connect(textArea,SIGNAL(redoAvailable(bool)),redoEditAction,SLOT(setEnabled(bool)));
@@ -109,6 +116,7 @@ void MainWindow::initMenus()
     fileMenu->addAction(saveFileAction);
     fileMenu->addAction(saveAsFileAction);
     fileMenu->addAction(exitFileAction);
+    fileMenu->addAction(printAction);
     /*---*/
     editMenu = menuBar()->addMenu(tr("&Edit"));
     editMenu->addAction(cutEditAction);
@@ -141,6 +149,7 @@ void MainWindow::initToolBars()
     toolBar->addAction(findEditAction);
     toolBar->addSeparator();
     toolBar->addAction(aboutHelpAction);
+    toolBar->addAction(printAction);
     toolBar->setVisible(true);
     connect(toolEditAction,SIGNAL(toggled(bool)),toolBar,SLOT(setVisible(bool)));
 }
@@ -150,6 +159,38 @@ void MainWindow::initContext(){
     this->addAction(pasteEditAction);
     this->addAction(selectEditAction);
     this->setContextMenuPolicy(Qt::ActionsContextMenu);
+}
+void MainWindow::printSlot(){
+
+    prepareDocument();
+
+    QPrinter printer(QPrinter::HighResolution);
+    printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName("output.pdf");
+    printer.setOrientation(QPrinter::Portrait);
+
+    QPrintPreviewDialog preview(&printer,this,Qt::WindowCloseButtonHint|Qt::WindowMaximizeButtonHint);
+    connect(&preview,SIGNAL(paintRequested(QPrinter*)),this,SLOT(printPreview(QPrinter*)));
+    preview.showMaximized();
+    preview.exec();
+    delete mDoc2Print;
+//    textArea->print(&printer);
+//#endif
+}
+void MainWindow::printPreview(QPrinter *printer){
+#ifdef QT_NO_PRINTER
+    Q_UNUSED(printer);
+#else
+    mDoc2Print->print(printer);
+#endif
+}
+
+void MainWindow::prepareDocument(){
+    mDoc2Print=new QTextDocument();
+    mDocCursor=QTextCursor(mDoc2Print);
+
+    mDocCursor.insertText(textArea->document()->toPlainText());
+
 }
 
 void MainWindow::isModified()
